@@ -1,21 +1,38 @@
+## 前準備
+Azure functionsを使うためにはstorage accountが必要になるので、事前に作っておく。
+
 ## Azure Functions Core Tools をインストールする
 [公式ドドキュメント](https://learn.microsoft.com/ja-jp/azure/azure-functions/functions-run-local?tabs=windows%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp#install-the-azure-functions-core-tools)
 
 インストールすると、`func`コマンドが使えるようになる。
 
-## Azure Functions にデプロイする環境の作成
-関数プロジェクトを作成する。関数プロジェクトとは、特定のトリガーに応答する関数を1つまたは複数含んだコンテナのこと。  
+## Azure Functions アプリの作成
+Azure関数アプリは、Azure上でサーバーレスでコードを実行するためのプラットフォーム。  
+関数アプリの名前は、AppName.azurewebsites.net として一意の FQDN を生成できる必要がある。
+```
+az functionapp create -n <APP_NAME> -g <RESOURCE_GROUP_NAME> -s <STORAGE_ACCOUNT_NAME> -c <LOCATION> --runtime python --runtime-version 3.10 --os-type linux --functions-version 4
+```
+
+## Azure Functions プロジェクトの作成
+関数プロジェクトとは、Azure Functionsで実行するコードを整理し、管理するための単位。   
+まずはpythonの仮想環境を作る。ローカルでAzure Functionsをテストするので、上記で作ったAzure Functionsアプリのバージョンと合わせる。
+```
+python -m venv .venv
+source .venv/bin/activate
+```
+
+仮想環境ができたら関数プロジェクトを作る。  
 `FOLDER_NAME`はローカルに作成されるフォルダ名(`example`フォルダに例を入れている。)
 ```
 func init <FOLDER_NAME> --python
 ```
-関数をプロジェクトに追加する。`FUNCTION_NAME`は分かりやすい名前で問題ない。
+Azure Functionsではトリガーに基づいてコードが実行される。  
+そのため、トリガーを設定する必要がある。`FUNCTION_NAME`は分かりやすい名前で問題ない。
 ```
 cd <FOLDER_NAME>
-func new --name <FUNCTION_NAME> --template "HTTP trigger"
+func new -n <FUNCTION_NAME> --template "HTTP trigger"
 ```
-HTTP triggerの場合、上記のコマンドを実行すると、`Select a number for Auth Level:`という文字列が表示される。  
-関数にアクセスするために必要な認可キーを表すので、適切なものを選択する。
+テンプレートの一覧は`func templates list`で取得できる。
 
 ## テスト
 ```
@@ -35,12 +52,6 @@ This HTTP triggered function executed successfully. Pass a name in the query str
 - 関数アプリ：関数プロジェクトを実行するための実行環境
 
 リソースグループとストレージアカウントの作成は、本リポジトリの別ディレクトリ参照。  
-
-### 関数アプリの作成
-`APP_NAME`にはグローバルで一意な名前をつける。
-```
-az functionapp create --resource-group <RESOURCE_GROUP_NAME> --consumption-plan-location <LOCATION_NAME> --runtime python --runtime-version <PYTHON_VERSION> --functions-version 4 --name <APP_NAME> --os-type linux --storage-account <STORAGE_NAME>
-```
 
 ## デプロイ
 ローカルに作った関数プロジェクトのフォルダに移動して、下記コマンドを実行する。
@@ -70,3 +81,5 @@ az functionapp delete -n <APP_NAME> -g <RESOURCE_GROUP_NAME>
 
 ## 参考
 [Python関数を追加](https://learn.microsoft.com/ja-jp/azure/azure-functions/create-first-function-cli-python?tabs=linux%2Cbash%2Cazure-cli%2Cbrowser)
+[az_funcionapp](https://learn.microsoft.com/ja-jp/cli/azure/functionapp?view=azure-cli-latest#az-functionapp-create)
+[azure_functions_core_toolsリファレンス](https://learn.microsoft.com/ja-jp/azure/azure-functions/functions-core-tools-reference?tabs=v2#func-init)
