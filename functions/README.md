@@ -68,6 +68,9 @@ az functionapp function keys list --function-name <FUNCTION_NAME> -g <RESOURCE_G
 ```
 Azure functionsにリクエストのキーがあるとき(たとえば`example/function_app.py`参照)、URLの最後にクエリパラメータを渡すと、それに応じたレスポンスを得ることができる。
 
+## CI/CD
+[CICDドキュメント](https://learn.microsoft.com/ja-jp/azure/azure-functions/functions-continuous-deployment?tabs=github%2Cgithub-actions%2Cazure-portal)
+
 ## 関数アプリの一覧表示
 ```
 az functionapp list -g <RESOURCE_GROUP_NAME> -o table
