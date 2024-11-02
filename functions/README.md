@@ -13,6 +13,11 @@ Azure関数アプリは、Azure上でサーバーレスでコードを実行す�
 az functionapp create -n <APP_NAME> -g <RESOURCE_GROUP_NAME> -s <STORAGE_ACCOUNT_NAME> -c <LOCATION> --runtime python --runtime-version 3.10 --os-type linux --functions-version 4
 ```
 
+関数アプリの一覧は次のコマンドで見ることができる。
+```
+az functionapp list -g <RESOURCE_GROUP_NAME> -o table
+```
+
 ## Azure Functions プロジェクトの作成
 関数プロジェクトとは、Azure Functionsで実行するコードを整理し、管理するための単位。   
 まずはpythonの仮想環境を作る。ローカルでAzure Functionsをテストするので、上記で作ったAzure Functionsアプリのバージョンと合わせる。
