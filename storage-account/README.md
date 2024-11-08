@@ -3,7 +3,7 @@
 
 ## 一覧表示
 ```
-az storage account list -g ResourceGroupName -o table
+az storage account list -g <RESOURCE_GROUP_NAME> -o table
 ```
 
 ## Storage accountの作成
